@@ -1,34 +1,26 @@
 class Solution {
 public:
     int longestPalindromeSubseq(string s) {
-          int n = s.size();
+    int n = s.size();
 
-    vector<vector<int>> dp(n, vector<int>(n, 0));
+    vector<int> dp(n, 1);
 
-    // Single characters are palindromes of length 1
-    for (int i = 0; i < n; i++) {
-        dp[i][i] = 1;
-    }
+    for (int i = n - 2; i >= 0; i--) {
+        int prev = 0;
 
-    // length = current substring length
-    for (int len = 2; len <= n; len++) {
-
-        for (int i = 0; i + len - 1 < n; i++) {
-
-            int j = i + len - 1;
+        for (int j = i + 1; j < n; j++) {
+            int temp = dp[j];
 
             if (s[i] == s[j]) {
-                dp[i][j] = 2 + dp[i + 1][j - 1];
+                dp[j] = 2 + prev;
+            } else {
+                dp[j] = max(dp[j], dp[j - 1]);
             }
-            else {
-                dp[i][j] = max(
-                    dp[i + 1][j],
-                    dp[i][j - 1]
-                );
-            }
+
+            prev = temp;
         }
     }
 
-    return dp[0][n - 1];
-    }
+    return dp[n - 1];
+}
 };
